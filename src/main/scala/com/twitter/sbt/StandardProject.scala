@@ -55,7 +55,7 @@ class StandardProject(info: ProjectInfo) extends DefaultProject(info)
   override def consoleAction = interactiveTask {
     val console = new Console(buildCompiler)
     val classpath = consoleClasspath +++ mainResourcesOutputPath
-    console(classpath.get, compileOptions.map(_.asString), "", log)
+    console(classpath.get, compileOptions.map(_.asString), consoleInit, log)
   } dependsOn(writeBuildProperties)
 
   // need to add mainResourcesOutputPath so the build.properties file can be found.
