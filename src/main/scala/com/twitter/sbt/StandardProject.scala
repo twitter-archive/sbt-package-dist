@@ -11,6 +11,7 @@ object StandardProject extends Plugin {
     Defaults.defaultSettings,
     DefaultRepos.newSettings,
     ArtifactoryPublisher.newSettings,
+    SubversionPublisher.newSettings,
     GitProject.gitSettings,
     BuildProperties.newSettings,
     PublishSourcesAndJavadocs.newSettings,

@@ -79,6 +79,7 @@ included are:
 
 * DefaultRepos
 * ArtifactoryPublisher
+* SubversionPublisher
 * GitProject
 * BuildProperties
 * PublishSourcesAndJavadocs
@@ -98,6 +99,17 @@ can't access the internet.
 Publishes artifacts to an "artifactory" (optionally with credentials) instead
 of the default publishing target. This mixin only takes effect if
 `artifactoryResolver` is set.
+
+### SubversionPublisher
+
+Publishes artifacts to a subversion repo, if one is set. Settings of interest
+are:
+
+* subversion-prefs-file - your credentials go in this file
+* subversion-username - if you want to hardcode this
+* subversion-password - if you're naughty and want to put this in source
+  control
+* subversion-repository - the url of your svn repo
 
 ### GitProject
 
@@ -133,17 +145,6 @@ Generates a deployable zip file of a server, containing:
 - any dependencies, in `lib/`
 - any scripts, in `scripts/`
 - any config files, in `config/`
-
-### SubversionPublisher
-
-Adds the ability to publish artifacts to a subversion repo. Settings of
-interest are:
-
-* subversion-prefs-file - your credentials go in this file
-* subversion-username - if you want to hardcode this
-* subversion-password - if you're naughty and want to put this in source
-  control
-* subversion-repository - the url of your svn repo
 
 ### VersionManagement
 
