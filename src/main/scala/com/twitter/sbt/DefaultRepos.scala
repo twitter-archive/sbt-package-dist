@@ -3,7 +3,6 @@ package com.twitter.sbt
 import sbt._
 import Keys._
 
-
 /**
  * Publish artifacts to an "artifactory" (optionally with credentials) instead of the default
  * publishing target.
