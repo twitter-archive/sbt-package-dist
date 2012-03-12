@@ -10,9 +10,9 @@ object StandardProject extends Plugin {
   val includes: Seq[Seq[Setting[_]]] = Seq(
     Defaults.defaultSettings,
     DefaultRepos.newSettings,
+    ArtifactoryPublisher.newSettings,
     GitProject.gitSettings,
     BuildProperties.newSettings,
-    PublishLocalWithMavenStyleBasePattern.newSettings,
     PublishSourcesAndJavadocs.newSettings,
     PackageDist.newSettings,
     VersionManagement.newSettings,
