@@ -18,7 +18,7 @@ object StandardProjectPlugin extends Build {
   ).settings(
     organization := "com.twitter",
     name := "sbt-package-dist",
-    version := "0.99.0",
+    version := "0.99.1-SNAPSHOT",
     SubversionPublisher.subversionRepository := Some("https://svn.twitter.biz/maven-public"),
     sbtPlugin := true,
     libraryDependencies ++= Seq (
