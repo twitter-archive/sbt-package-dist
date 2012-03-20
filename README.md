@@ -60,7 +60,8 @@ projects:
     
     object MyProject extends Build {
       lazy val root = Project(
-        id = "util", base = file("."),
+        id = "my-project",
+        base = file("."),
         settings = StandardProject.newSettings
       )
     }
