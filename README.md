@@ -48,7 +48,7 @@ the one(s) you want:
     import com.twitter.sbt._
 
     seq(GitProject.gitSettings: _*)
- 
+
 ### Using a .scala build definition
 
 In your scala build definition, just extend the settings of any defined
