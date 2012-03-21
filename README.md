@@ -46,9 +46,9 @@ If you want to include only a specific mixin's settings, you can specify just
 the one(s) you want:
 
     import com.twitter.sbt._
-    
+
     seq(GitProject.gitSettings: _*)
-    
+ 
 ### Using a .scala build definition
 
 In your scala build definition, just extend the settings of any defined
@@ -57,7 +57,7 @@ projects:
     import sbt._
     import Keys._
     import com.twitter.sbt._
-    
+
     object MyProject extends Build {
       lazy val root = Project(
         id = "my-project",
@@ -65,7 +65,7 @@ projects:
         settings = StandardProject.newSettings
       )
     }
-  
+
 Reference
 =========
 
