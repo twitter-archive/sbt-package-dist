@@ -7,42 +7,50 @@ import Keys._
  * various tasks for working with git-based projects
  */
 object GitProject extends Plugin {
-  /**
-   * returns true if this is a git repo
-   */
-  val gitIsRepository = TaskKey[Boolean]("git-is-repository", "a task for determining if this is a git project")
-  /**
-   * returns the current git sha (if this is a repo)
-   */
-  val gitProjectSha = TaskKey[Option[String]]("git-project-sha", "the SHA of the current project")
-  /**
-   * how many commits to return with last-commits
-   */
-  val gitLastCommitsCount = SettingKey[Int]("git-last-commits-count", "the number of commits to report from git-last-commits")
-  /**
-   * the last n commits, where n is determined by git-last-commits-count
-   */
-  val gitLastCommits = TaskKey[Option[Seq[String]]]("git-last-commits", "the latest commits to the project")
-  /**
-   * the current branch name
-   */
-  val gitBranchName = TaskKey[Option[String]]("git-branch-name", "the name of the git branch")
-  /**
-   * get a default commit message for the project (usually "commiting release <n>")
-   */
-  val gitCommitMessage = TaskKey[String]("git-commit-message", "get a commit message for the project")
-  /**
-   * add and commit the current project
-   */
-  val gitCommit = TaskKey[Int]("git-commit", "commit the current project")
-  /**
-   * tag the current version
-   */
-  val gitTag = TaskKey[Int]("git-tag", "tag the project with the current version")
-  /**
-   * generates a tag for the current project
-   */
-  val gitTagName = TaskKey[String]("git-tag-name", "a task to define a tag name given the current project")
+  val gitIsRepository = TaskKey[Boolean](
+    "git-is-repository",
+    "true if this is project is inside a git repo"
+  )
+
+  val gitProjectSha = TaskKey[Option[String]](
+    "git-project-sha",
+    "the SHA of the current project head (if it's in a git repo)"
+  )
+
+  val gitLastCommits = TaskKey[Option[Seq[String]]](
+    "git-last-commits",
+    "the latest commits to the project (if it's in a git repo)"
+  )
+
+  val gitLastCommitsCount = SettingKey[Int](
+    "git-last-commits-count",
+    "the number of commits to report from git-last-commits"
+  )
+
+  val gitBranchName = TaskKey[Option[String]](
+    "git-branch-name",
+    "the name of the current git branch, failing back to git-project-sha (if we're in a git repo)"
+  )
+
+  val gitCommitMessage = TaskKey[String](
+    "git-commit-message",
+    "create a commit message for a new release of this project (used by git-commit)"
+  )
+
+  val gitCommit = TaskKey[Int](
+    "git-commit",
+    "commit pending changes to this project (usually as part of publishing a release)"
+  )
+
+  val gitTag = TaskKey[Int](
+    "git-tag",
+    "tag the project with the current version"
+  )
+
+  val gitTagName = TaskKey[String](
+    "git-tag-name",
+    "define a tag name for the current project version (used by git-tag)"
+  )
 
   /**
    * run f if isRepo is true
@@ -70,7 +78,7 @@ object GitProject extends Plugin {
     },
     gitBranchName <<= (gitIsRepository) map { isRepo =>
       ifRepo(isRepo) {
-        ("git symbolic-ref HEAD" !!).trim
+        ("git symbolic-ref -q HEAD" #|| "git rev-parse HEAD" !!).trim
       }
     },
     gitTagName <<= (organization, name, version) map { (o, n, v) =>
