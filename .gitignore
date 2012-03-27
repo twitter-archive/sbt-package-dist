@@ -3,11 +3,10 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
-src/main/scala/com/twitter/sbt/BuildInfo.scala
-
 /standard-project.tmproj
 *.iml
 .idea
 .classpath
 .project
 .scala_dependencies
+ignore

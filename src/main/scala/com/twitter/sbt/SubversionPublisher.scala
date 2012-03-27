@@ -116,6 +116,6 @@ object SubversionPublisher extends Plugin {
       resolverOpt
     },
 
-    publishTo <<= subversionResolver
+    publishTo <<= (publishTo, subversionResolver) { (p, s) => s orElse p }
   )
 }
