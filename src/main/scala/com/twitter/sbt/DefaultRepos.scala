@@ -77,7 +77,7 @@ object DefaultRepos extends Plugin with Environmentalist {
         Seq("proxy-repo" at url)
       } getOrElse {
         resolvers ++ defaultResolvers
-      }) ++ Seq(Resolver.file("local", localRepo)(Resolver.mavenStylePatterns))
+      }) ++ Seq("local" at ("file:" + localRepo.getAbsolutePath))
     },
 
     // don't add any special resolvers.
