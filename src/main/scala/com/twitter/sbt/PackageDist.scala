@@ -112,6 +112,12 @@ object PackageDist extends Plugin {
     TaskKey[Set[File]]("package-dist-copy-jars", "copy exported files into the package dist folder")
 
   /**
+   * task to copy dependent projects jars
+   */
+  val packageDistCopySubprojects =
+    TaskKey[Set[File]]("package-dist-copy-subprojects", "copy subprojects jars into the package dist folder")
+
+  /**
    * task to copy all dist-ready files to dist
    */
   val packageDistCopy =
@@ -262,13 +268,24 @@ object PackageDist extends Plugin {
       IO.copy((products ++ testProducts).files.map(p => (p, dest / p.getName)))
     },
 
+    packageDistCopySubprojects <<= (thisProjectRef, state, packageDistDir).flatMap { case(ref, state, dest) =>
+      val structure = Project.structure(state)
+      val allProjects = Project.getProject(ref, structure).toList.flatMap(_.dependencies.map(_.project))
+      val packageTaskKey = (packageBin in Compile).task
+      val packageAllTask = allProjects.flatMap(p => (packageTaskKey in p).get(structure.data)).join
+      packageAllTask.map { jars =>
+        IO.copy(jars.map {f => (f, dest / "libs" / f.getName)})
+      }
+    },
+
     packageDistCopy <<= (
       packageDistCopyLibs,
       packageDistCopyScripts,
       packageDistCopyConfig,
-      packageDistCopyJars
-    ) map { (libs, scripts, config, jars) =>
-      libs ++ scripts ++ config ++ jars
+      packageDistCopyJars,
+      packageDistCopySubprojects
+    ) map { (libs, scripts, config, jars, subprojects) =>
+      libs ++ scripts ++ config ++ jars ++ subprojects
     },
 
     packageDistConfigFiles <<= (
