@@ -79,6 +79,11 @@ object PackageDist extends Plugin {
     TaskKey[Unit]("package-dist-clean", "clean distribution artifacts")
 
   /**
+   * task to package all project dependencies
+   */
+  val packageAllDeps =
+    TaskKey[Set[File]]("package-all-deps", "package all project dependencies")
+  /**
    * task to generate the map of substitutions to perform on scripts as they're copied
    */
   val packageVars =
@@ -166,8 +171,12 @@ object PackageDist extends Plugin {
     },
 
     // write a classpath entry to the manifest
-    packageOptions <+= (dependencyClasspath in Compile, mainClass in Compile) map { (cp, main) =>
-      val manifestClasspath = cp.files.map(f => "libs/" + f.getName).mkString(" ")
+    packageOptions <+= (
+      dependencyClasspath in Compile,
+      packageAllDeps,
+      mainClass in Compile
+    ) map { (cp, deps, main) =>
+      val manifestClasspath = (cp.files ++ deps).map(f => "libs/" + f.getName).mkString(" ")
       // not sure why, but Main-Class needs to be set explicitly here.
       val attrs = Seq(("Class-Path", manifestClasspath)) ++ main.map { ("Main-Class", _) }
       Package.ManifestAttributes(attrs: _*)
@@ -203,6 +212,16 @@ object PackageDist extends Plugin {
     ) map { (r, g, n, v) =>
       val revName = g.map(_.substring(0, 8)).getOrElse(v)
       "%s-%s.zip".format(n, if (r) v else revName)
+    },
+
+    packageAllDeps <<= (
+      thisProjectRef,
+      state
+    ) flatMap { case(ref, state) =>
+      val structure = Project.structure(state)
+      val allProjects = Project.getProject(ref, structure).toSeq.flatMap(_.dependencies.map(_.project))
+      val packageTaskKey = (packageBin in Compile).task
+      allProjects.flatMap(p => (packageTaskKey in p).get(structure.data)).join.map(_.toSet)
     },
 
     packageVars <<= (
@@ -268,14 +287,11 @@ object PackageDist extends Plugin {
       IO.copy((products ++ testProducts).files.map(p => (p, dest / p.getName)))
     },
 
-    packageDistCopySubprojects <<= (thisProjectRef, state, packageDistDir).flatMap { case(ref, state, dest) =>
-      val structure = Project.structure(state)
-      val allProjects = Project.getProject(ref, structure).toList.flatMap(_.dependencies.map(_.project))
-      val packageTaskKey = (packageBin in Compile).task
-      val packageAllTask = allProjects.flatMap(p => (packageTaskKey in p).get(structure.data)).join
-      packageAllTask.map { jars =>
-        IO.copy(jars.map {f => (f, dest / "libs" / f.getName)})
-      }
+    packageDistCopySubprojects <<= (
+      packageAllDeps,
+      packageDistDir
+    ) map { case(deps, dest) =>
+      IO.copy(deps.map {f => (f, dest / "libs" / f.getName)})
     },
 
     packageDistCopy <<= (
