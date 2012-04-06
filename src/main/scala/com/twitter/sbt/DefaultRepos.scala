@@ -77,7 +77,12 @@ object DefaultRepos extends Plugin with Environmentalist {
         Seq("proxy-repo" at url)
       } getOrElse {
         resolvers ++ defaultResolvers
-      }) ++ Seq("local" at ("file:" + localRepo.getAbsolutePath))
+      }) ++ Seq(
+        // the local repo has to be in here twice, because sbt won't push to a "file:"
+        // repo, but it won't read artifacts from a "Resolver.file" repo. (head -> desk)
+        "local-lookup" at ("file:" + localRepo.getAbsolutePath),
+        Resolver.file("local", localRepo)(Resolver.mavenStylePatterns)
+      )
     },
 
     // don't add any special resolvers.
