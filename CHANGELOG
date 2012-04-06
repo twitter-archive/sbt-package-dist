@@ -1,100 +1,14 @@
+1.0.1
+-----
+release: 6 Apr 2012
+
+- fixed "local" repo to be part of default repo chain
+- fixed build timestamp in build.properties
+
+
 1.0.0
 -----
-release: 24 Sep 2011
+release: 27 Mar 2012
 
-- dont validate config files by default; make it a setting in the project
-  file to turn on
-- expose a way to narrow the set of config files to validate
-- allow publish-to-github's remote repo to be overridden
+- re-branded as "sbt-package-dist" to distinguish from the old sbt 7 code
 
-0.12.12
--------
-release: 24 Aug 2011
-
-- fix bug in ProjectDependencies
-
-0.12.11
--------
-release: 24 Aug 2011
-
-- fix bug in PublishLocalWithMavenStyleBasePattern
-
-0.12.10
--------
-
-- test-project tests relevant parent projects, and ensures the project is actually testable
-- added a phase to validate config files during packaging
-
-0.12.7
-------
-release: 24 may 2011
-
-- fixed ivyRepositories in DefaultRepos to honor a proxy repo
-
-
-0.12.6
-------
-release: 10 may 2011
-
-- moved generate-ensime into a trait: EnsimeGenerator.
-
-
-0.12.5
-------
-release: 10 May 2011
-
-- added a generate-ensime task to StandardProject which will generate a .ensime file for your project.
-
-
-0.12.4
-------
-release: 9 May 2011
-
-- Added branch name and last few commit summaries to `build.properties`.
-
-
-0.12.3
-------
-release: 5 May 2011
-
-- Source and javadocs are published by default now.
-
-- Fixed the run classpath to include scala jars.
-
-- Files in `doc/` will be copied over into the generated site. Any markdown files found in either
-  `doc/` or `site/` will be compiled into HTML.
-
-
-0.11.16
--------
-release: 20 Apr 2011
-
-- added a PublishThrift trait to publish everything in src/main/thrift
-	with a qualifier of -thrift
-
-
-0.11.14
--------
-release: 15 Apr 2011
-
-- build-site supports subprojects/parent projects
-
-
-0.11.13
--------
-release: 14 apr 2011
-
-- Updated README to more thoroughly document all our base classes, traits, and general usage
-
-- Made StandardProjectPlugin extend from StandardProject to pull in all the niceness StandardProject provides
-
-
-0.11.12
--------
-release: 14 apr 2011
-
-- don't automatically do "sbt idea" ever
-
-- don't try to generate API documentation for thrift-generated code
-
-- pretter generated site, and anything in site/ will now get copied over
