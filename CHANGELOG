@@ -1,9 +1,16 @@
-1.0.1
+1.0.2
 -----
 release: 6 Apr 2012
 
 - fixed "local" repo to be part of default repo chain
 - fixed build timestamp in build.properties
+
+
+1.0.1
+-----
+release: never
+
+an odd ivy bug believed this version existed in some form.
 
 
 1.0.0
