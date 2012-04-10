@@ -1,3 +1,10 @@
+1.0.3
+-----
+release: 9 Apr 2012
+
+- fixed "local" again to have one copy for each direction (resolve or publish)
+
+
 1.0.2
 -----
 release: 6 Apr 2012
