@@ -1,3 +1,8 @@
+1.0.4
+-----
+
+- moved packaged zip file to dist folder (out of hierarchy being zipped)
+
 1.0.3
 -----
 release: 9 Apr 2012
