@@ -65,7 +65,7 @@ object DefaultRepos extends Plugin with Environmentalist {
       "jboss" at "http://repository.jboss.org/nexus/content/groups/public/"
     ),
 
-    localRepo := file(System.getProperty("user.home") + "/.m2/repo"),
+    localRepo := file(System.getProperty("user.home") + "/.m2/repository"),
 
     // configure resolvers for the build
     resolvers <<= (
