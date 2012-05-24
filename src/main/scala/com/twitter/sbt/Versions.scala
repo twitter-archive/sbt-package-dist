@@ -107,9 +107,11 @@ object VersionManagement extends Plugin {
     val from = extracted.get(Keys.version)
     val newVersion = f(from) match {
       case Some(to) => {
-        val files = (PathFinder(base / "project") ** "*.scala").get ++ Seq((base / "build.sbt"))
+        val files = (PathFinder(base / "project") ** "*.scala").get ++
+          Seq((base / "build.sbt")) ++
+          Seq((base / ".." / "build.sbt"))
         val matchers = regexes.map(Pattern.compile(_))
-        files.filter(_.exists).foreach { f =>
+        files.filter(_.exists).headOption.foreach { f =>
           log.info("Setting version %s in file %s".format(to, f))
           writeNewVersion(f, matchers, from, to)
         }
@@ -141,7 +143,7 @@ object VersionManagement extends Plugin {
       IO.foldLines(reader, Seq[String]()) { (lines, line) =>
         lines :+ matchers.foldLeft(line) { (line, r) =>
           val verMatcher = r.matcher(line)
-          if (verMatcher.matches && line.contains(from.toString)) {
+          if (verMatcher.find() && line.contains(from.toString)) {
             shouldWrite = true
             line.replaceAll(from.toString, to.toString)
           } else {
@@ -207,8 +209,8 @@ object VersionManagement extends Plugin {
 
   val newSettings = Seq(
     // very crude, but really, if you have fancy pants version settings then you're on your own
-    versionRegexes := Seq(""".*version.*:=\s*(".*").*""")
-   )
+    versionRegexes := Seq("""\bversion\s+:=\s*("(.*?)")""")
+  )
 
   /**
    * make commands available to projects
