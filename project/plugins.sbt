@@ -20,7 +20,7 @@ resolvers <<= (resolvers) { r =>
 externalResolvers <<= (resolvers) map identity
 
 libraryDependencies <+= (sbtVersion) { sv =>
-  "org.scala-tools.sbt" %% "scripted-plugin" % sv
+  "org.scala-sbt" % "scripted-plugin" % sv
 }
 
 libraryDependencies += "ivysvn" % "ivysvn" % "2.1.0"
