@@ -25,4 +25,3 @@ libraryDependencies <+= (sbtVersion) { sv =>
 
 libraryDependencies += "ivysvn" % "ivysvn" % "2.1.0"
 
-libraryDependencies += Defaults.sbtPluginExtra("com.twitter" % "sbt-package-dist" % "1.0.0", "0.11.2", "2.9.1")
