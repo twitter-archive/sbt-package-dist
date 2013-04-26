@@ -98,7 +98,7 @@ object VersionManagement extends Plugin {
    * apply f to the current version, update versions in .sbt and build .scala files,
    * mutate project state
    */
-  def changeVersion(state: State, log: Logger)(f: Version => Option[Version]): State = {
+  def changeVersion(state: State)(f: Version => Option[Version]): State = {
     val extracted = Project.extract(state)
     import extracted._
     val base = extracted.get(Keys.baseDirectory)
@@ -112,13 +112,13 @@ object VersionManagement extends Plugin {
           Seq((base / ".." / "build.sbt"))
         val matchers = regexes.map(Pattern.compile(_))
         files.filter(_.exists).headOption.foreach { f =>
-          log.info("Setting version %s in file %s".format(to, f))
+          state.log.info("Setting version %s in file %s".format(to, f))
           writeNewVersion(f, matchers, from, to)
         }
         Some(to)
       }
       case _ => {
-        log.warn("Version %s is not a semantic version, cannot change".format(from))
+        state.log.warn("Version %s is not a semantic version, cannot change".format(from))
         None
       }
     }
@@ -163,48 +163,42 @@ object VersionManagement extends Plugin {
     "Bump the major version number (for example, 2.1.4 -> 3.0.0)",
     ""
   ) { state =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { _.incMajor }
+    changeVersion(state) { _.incMajor }
   }
   def versionBumpMinor = Command.command(
     "version-bump-minor",
     "Bump the minor version number (for example, 2.1.4 -> 2.2.0)",
     ""
   ) { state =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { _.incMinor }
+    changeVersion(state) { _.incMinor }
   }
   def versionBumpPatch = Command.command(
     "version-bump-patch",
     "Bump the patch version number (for example, 2.1.4 -> 2.1.5)",
     ""
   ) { state =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { _.incPatch }
+    changeVersion(state) { _.incPatch }
   }
   def versionToSnapshot = Command.command(
     "version-to-snapshot",
     "Convert the current version into a snapshot release (for example, 2.1.4 -> 2.1.4-SNAPSHOT)",
     ""
   ) { state =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { v => Some(v.toSnapshot) }
+    changeVersion(state) { v => Some(v.toSnapshot) }
   }
   def versionToStable = Command.command(
     "version-to-stable",
     "Convert the current version into a stable release (for example, 2.1.4-SNAPSHOT -> 2.1.4)",
     ""
   ) { state =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { v => Some(v.stripSnapshot) }
+    changeVersion(state) { v => Some(v.stripSnapshot) }
   }
   def versionSet = Command.single(
     "version-set",
     ("version-set version", "Manually set the current version"),
     ""
   ) { (state: State, v: String) =>
-    val log = CommandSupport.logger(state)
-    changeVersion(state, log) { old => Some(v) }
+    changeVersion(state) { old => Some(v) }
   }
 
   val newSettings = Seq(
