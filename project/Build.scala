@@ -18,7 +18,7 @@ object StandardProjectPlugin extends Build {
   ).settings(
     organization := "com.twitter",
     name := "sbt-package-dist",
-    version := "1.1.1-SNAPSHOT",
+    version := "1.1.2-SNAPSHOT",
     sbtPlugin := true,
     libraryDependencies ++= Seq (
       "ivysvn" % "ivysvn" % "2.1.0",

@@ -14,7 +14,7 @@ resolvers <<= (resolvers) { r =>
       "maven" at "http://repo1.maven.org/maven2/",
       "freemarker" at "http://freemarker.sourceforge.net/maven2/"
     )
-  }) ++ Seq("local" at ("file:" + System.getProperty("user.home") + "/.m2/repo/"))
+  }) ++ Seq("local" at ("file:" + System.getProperty("user.home") + "/.m2/repository/"))
 }
 
 externalResolvers <<= (resolvers) map identity
@@ -25,4 +25,4 @@ libraryDependencies <+= (sbtVersion) { sv =>
 
 libraryDependencies += "ivysvn" % "ivysvn" % "2.1.0"
 
-libraryDependencies += Defaults.sbtPluginExtra("com.twitter" % "sbt-package-dist" % "1.1.0", "0.12", "2.9.2")
+libraryDependencies += Defaults.sbtPluginExtra("com.twitter" % "sbt-package-dist" % "1.1.1", "0.12", "2.9.2")

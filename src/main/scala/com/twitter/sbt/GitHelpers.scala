@@ -8,6 +8,7 @@ import java.io.File
  */
 trait GitHelpers {
   def gitIsCleanWorkingTree: Boolean = {
-    ("git status" !!).contains("nothing to commit (working directory clean)")
+    ("git status" !!).contains("nothing to commit (working directory clean)") ||
+    ("git status" !!).contains("nothing to commit, working directory clean")
   }
 }
