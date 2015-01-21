@@ -312,6 +312,7 @@ object PackageDist extends Plugin {
     },
       // package all the things
     packageDistNoTests <<= (
+      (compile in Compile),
       baseDirectory,
       packageDistCopy,
       packageDistValidateConfigFiles,
@@ -320,7 +321,7 @@ object PackageDist extends Plugin {
       packageDistZipPath,
       packageDistZipName,
       streams
-    ) map { (base, files, _, dest, distName, zipPath, zipName, s) =>
+    ) map { (_, base, files, _, dest, distName, zipPath, zipName, s) =>
       // build the zip
       s.log.info("Building %s from %d files.".format(zipName, files.size))
       val zipRebaser = Path.rebase(dest, zipPath)
