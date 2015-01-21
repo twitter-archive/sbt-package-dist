@@ -25,10 +25,16 @@ object PackageDist extends Plugin {
     SettingKey[File]("package-dist-dir", "the directory to package dists into")
 
   /**
-   * the task to actually build the zip file
+   * run tests then build zip file
    */
   val packageDist =
-    TaskKey[File]("package-dist", "package a distribution for the current project")
+    TaskKey[File]("package-dist", "package a distribution for the current project after tests are run")
+
+  /**
+   * the task to actually build the zip file
+   */
+  val packageDistNoTests =
+    TaskKey[File]("package-dist-no-tests", "package a distribution for the current project, without running tests")
 
   /**
    * the name of our distribution
@@ -304,10 +310,8 @@ object PackageDist extends Plugin {
         file
       }
     },
-
-    // package all the things
-    packageDist <<= (
-      test in Test,
+      // package all the things
+    packageDistNoTests <<= (
       baseDirectory,
       packageDistCopy,
       packageDistValidateConfigFiles,
@@ -316,13 +320,19 @@ object PackageDist extends Plugin {
       packageDistZipPath,
       packageDistZipName,
       streams
-    ) map { (_, base, files, _, dest, distName, zipPath, zipName, s) =>
+    ) map { (base, files, _, dest, distName, zipPath, zipName, s) =>
       // build the zip
       s.log.info("Building %s from %d files.".format(zipName, files.size))
       val zipRebaser = Path.rebase(dest, zipPath)
       val zipFile = base / "dist" / zipName
       IO.zip(files.map(f => (f, zipRebaser(f).get)), zipFile)
       zipFile
+    },
+
+    // package all the things, plus tests
+    packageDist := {
+      (test in Test).value
+      packageDistNoTests.value
     }
   )
 }

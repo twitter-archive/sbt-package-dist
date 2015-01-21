@@ -13,9 +13,9 @@ object StandardProjectPlugin extends Build {
   ).settings(
     organization := "com.twitter",
     name := "sbt-package-dist",
-    version := "1.1.2",
+    version := "1.1.3",
     sbtPlugin := true,
-    crossScalaVersions := Seq("2.9.2", "2.10.1"),
+    scalaVersion := "2.10.4",
     libraryDependencies ++= Seq (
       "ivysvn" % "ivysvn" % "2.1.0",
       "org.markdownj" % "markdownj" % "0.3.0-1.0.2b4",
