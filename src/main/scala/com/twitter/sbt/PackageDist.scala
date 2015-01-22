@@ -321,19 +321,35 @@ object PackageDist extends Plugin {
       packageDistZipPath,
       packageDistZipName,
       streams
-    ) map { (_, base, files, _, dest, distName, zipPath, zipName, s) =>
+    ) map { (_, base, files, _, dest, _, zipPath, zipName, s) =>
       // build the zip
-      s.log.info("Building %s from %d files.".format(zipName, files.size))
-      val zipRebaser = Path.rebase(dest, zipPath)
-      val zipFile = base / "dist" / zipName
-      IO.zip(files.map(f => (f, zipRebaser(f).get)), zipFile)
-      zipFile
+      createPackage(base, files, dest, zipPath, zipName, s)
     },
 
     // package all the things, plus tests
-    packageDist := {
-      (test in Test).value
-      packageDistNoTests.value
+    packageDist <<= (
+      (test in Test),
+      baseDirectory,
+      packageDistCopy,
+      packageDistValidateConfigFiles,
+      packageDistDir,
+      packageDistName,
+      packageDistZipPath,
+      packageDistZipName,
+      streams
+      ) map { (_, base, files, _, dest, _, zipPath, zipName, s) =>
+      // build the zip
+      createPackage(base, files, dest, zipPath, zipName, s)
     }
   )
+
+  private def createPackage(base: sbt.File, files: Set[sbt.File], dest: sbt.File, zipPath: String, zipName: String, s: Keys.TaskStreams) = {
+    // build the zip
+    s.log.info("Building %s from %d files.".format(zipName, files.size))
+    val zipRebaser = Path.rebase(dest, zipPath)
+    val zipFile = base / "dist" / zipName
+    IO.zip(files.map(f => (f, zipRebaser(f).get)), zipFile)
+    zipFile
+  }
+
 }
