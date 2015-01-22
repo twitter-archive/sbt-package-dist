@@ -1,6 +1,6 @@
 sbtResolver <<= (sbtResolver) { r =>
   Option(System.getenv("SBT_PROXY_REPO")) map { x =>
-    Resolver.url("proxy repo for sbt", url(x))(Resolver.ivyStylePatterns)
+    Resolver.url("proxy repo for sbt", url(x))(Resolver.ivyStylePatterns)                                             
   } getOrElse r
 }
 
@@ -24,5 +24,3 @@ libraryDependencies <+= (sbtVersion) { sv =>
 }
 
 libraryDependencies += "ivysvn" % "ivysvn" % "2.1.0"
-
-libraryDependencies += Defaults.sbtPluginExtra("com.twitter" % "sbt-package-dist" % "1.1.1", "0.12", "2.9.2")

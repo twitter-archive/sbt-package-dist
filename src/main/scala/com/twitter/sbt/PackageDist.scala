@@ -25,10 +25,16 @@ object PackageDist extends Plugin {
     SettingKey[File]("package-dist-dir", "the directory to package dists into")
 
   /**
-   * the task to actually build the zip file
+   * run tests then build zip file
    */
   val packageDist =
-    TaskKey[File]("package-dist", "package a distribution for the current project")
+    TaskKey[File]("package-dist", "package a distribution for the current project after tests are run")
+
+  /**
+   * the task to actually build the zip file
+   */
+  val packageDistNoTests =
+    TaskKey[File]("package-dist-no-tests", "package a distribution for the current project, without running tests")
 
   /**
    * the name of our distribution
@@ -304,10 +310,9 @@ object PackageDist extends Plugin {
         file
       }
     },
-
-    // package all the things
-    packageDist <<= (
-      test in Test,
+      // package all the things
+    packageDistNoTests <<= (
+      (compile in Compile),
       baseDirectory,
       packageDistCopy,
       packageDistValidateConfigFiles,
@@ -316,13 +321,35 @@ object PackageDist extends Plugin {
       packageDistZipPath,
       packageDistZipName,
       streams
-    ) map { (_, base, files, _, dest, distName, zipPath, zipName, s) =>
+    ) map { (_, base, files, _, dest, _, zipPath, zipName, s) =>
       // build the zip
-      s.log.info("Building %s from %d files.".format(zipName, files.size))
-      val zipRebaser = Path.rebase(dest, zipPath)
-      val zipFile = base / "dist" / zipName
-      IO.zip(files.map(f => (f, zipRebaser(f).get)), zipFile)
-      zipFile
+      createPackage(base, files, dest, zipPath, zipName, s)
+    },
+
+    // package all the things, plus tests
+    packageDist <<= (
+      (test in Test),
+      baseDirectory,
+      packageDistCopy,
+      packageDistValidateConfigFiles,
+      packageDistDir,
+      packageDistName,
+      packageDistZipPath,
+      packageDistZipName,
+      streams
+      ) map { (_, base, files, _, dest, _, zipPath, zipName, s) =>
+      // build the zip
+      createPackage(base, files, dest, zipPath, zipName, s)
     }
   )
+
+  private def createPackage(base: sbt.File, files: Set[sbt.File], dest: sbt.File, zipPath: String, zipName: String, s: Keys.TaskStreams) = {
+    // build the zip
+    s.log.info("Building %s from %d files.".format(zipName, files.size))
+    val zipRebaser = Path.rebase(dest, zipPath)
+    val zipFile = base / "dist" / zipName
+    IO.zip(files.map(f => (f, zipRebaser(f).get)), zipFile)
+    zipFile
+  }
+
 }

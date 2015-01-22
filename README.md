@@ -1,8 +1,10 @@
 
+
+
 sbt-package-dist
 ================
 
-sbt-package-dist is a plugin for sbt 0.11 which attempts to codify best
+sbt-package-dist is a plugin for sbt 0.12.x which attempts to codify best
 practices for building, packaging, and publishing libraries and servers. It
 adds the following features:
 
@@ -24,7 +26,7 @@ See https://github.com/harrah/xsbt/wiki/Plugins for information on adding
 plugins. In general, you'll need to add the following to your
 project/plugins.sbt file:
 
-    addSbtPlugin("com.twitter" % "sbt-package-dist" % "1.0.0")
+    addSbtPlugin("com.twitter" % "sbt-package-dist" % "1.1.0-SNAPSHOT")
 
 ## Mixing in sbt-package-dist
 
