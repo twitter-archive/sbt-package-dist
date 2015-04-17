@@ -20,6 +20,7 @@ object StandardProjectPlugin extends Build {
     name := "sbt-package-dist",
     version := "1.1.2-SNAPSHOT",
     sbtPlugin := true,
+    crossScalaVersions := Seq("2.9.2", "2.10.1"),
     libraryDependencies ++= Seq (
       "ivysvn" % "ivysvn" % "2.1.0",
       "org.markdownj" % "markdownj" % "0.3.0-1.0.2b4",
