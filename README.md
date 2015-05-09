@@ -1,10 +1,10 @@
+sbt-package-dist [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.websudos/sbt-package-dist_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.websudos/sbt-package-dist_2.10)
 
-
-
-sbt-package-dist
 ================
 
-sbt-package-dist is a plugin for sbt 0.12.x which attempts to codify best
+The latest version of this plugin is ```1.2.0```.
+
+sbt-package-dist is a plugin for sbt 0.12.x and 0.13.x which attempts to codify best
 practices for building, packaging, and publishing libraries and servers. It
 adds the following features:
 
@@ -16,6 +16,31 @@ adds the following features:
 - the ability to publish into an svn repo (using ivy-svn)
 - commands to make it easier to follow semantic versioning for releases,
   including tagging releases in git
+  
+Important
+==========
+  
+This fork of sbt-package-dist is maintained by [Websudos](http://websudos.com) and is no longer affiliated with Twitter
+per say as they have discontinued support for this plugin on their behalf. We however love their software more than they do
+and we haven't moved out of SBT for core projects like they have.
+
+The SBT plugin is published to our Bintray repository, as well as Maven Central:
+
+To use it, add the bintray SBT plugin to your ```plugins.sbt```:
+
+```scala
+addSbtPlugin("me.lessis" % "bintray-sbt" % "0.3.0")
+
+// and the following to your resolvers
+
+resolvers ++= Seq(
+    Resolvers.bintrayRepo("websudos", "oss-releases")
+)
+```
+
+The Maven Central version of this plugin is now available under ```com.websudos``` instead of ```com.twitter```. While
+we weren't looking to steal any credit, we cannot publish to Maven Central under a different organisation, simply as a
+result of permissions. Nothing else has changed internally inside the project other than the organisation.
 
 General Usage
 =============
@@ -26,7 +51,7 @@ See https://github.com/harrah/xsbt/wiki/Plugins for information on adding
 plugins. In general, you'll need to add the following to your
 project/plugins.sbt file:
 
-    addSbtPlugin("com.twitter" % "sbt-package-dist" % "1.1.0-SNAPSHOT")
+    addSbtPlugin("com.websudos" % "sbt-package-dist" % "1.2.0")
 
 ## Mixing in sbt-package-dist
 
